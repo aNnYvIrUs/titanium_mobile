@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2010 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -16,19 +16,6 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #include <libkern/OSAtomic.h>
 
-@interface TitaniumObject : KrollObject {
-  @private
-  NSMutableDictionary *modules;
-  TiHost *host;
-  id<TiEvaluator> pageContext;
-  NSMutableDictionary *dynprops;
-}
-
-- (id)initWithContext:(KrollContext *)context_ host:(TiHost *)host_ context:(id<TiEvaluator>)context baseURL:(NSURL *)baseURL_;
-- (id)addModule:(NSString *)name module:(TiModule *)module;
-- (TiModule *)moduleNamed:(NSString *)name context:(id<TiEvaluator>)context;
-@end
-
 extern NSString *TitaniumModuleRequireFormat;
 
 @interface KrollBridge : Bridge <TiEvaluator, KrollDelegate> {
@@ -39,7 +26,7 @@ extern NSString *TitaniumModuleRequireFormat;
   NSDictionary *preload;
   NSMutableDictionary *modules;
   NSMutableDictionary *pathCache;
-  TitaniumObject *titanium;
+//  TitaniumObject *titanium;
   KrollObject *console;
   BOOL shutdown;
   BOOL evaluationError;

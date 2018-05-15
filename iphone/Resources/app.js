@@ -7,15 +7,15 @@
  */
 
 var win = Ti.UI.createWindow({
-    backgroundColor: '#fff'
+	backgroundColor: '#fff'
 });
 
 var btn = Ti.UI.createButton({
-    title: 'Trigger'
+	title: 'Trigger'
 });
 
-btn.addEventListener('click', function() {
-    Ti.API.info('Hello world!');
+btn.addEventListener('click', function () {
+	Ti.API.info('Hello world!');
 });
 
 win.add(btn);

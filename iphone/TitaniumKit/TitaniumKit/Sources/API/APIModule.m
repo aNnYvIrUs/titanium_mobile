@@ -5,10 +5,10 @@
  * Please see the LICENSE included with this distribution for details.
  */
 #import "APIModule.h"
-#import "TiApp.h"
-#import "TiBase.h"
+//#import "TiApp.h"
+//#import "TiBase.h"
 #import "TiExceptionHandler.h"
-#import "TiUtils.h"
+//#import "TiUtils.h"
 
 @implementation APIModule
 
@@ -17,9 +17,29 @@
   return @"Ti.API";
 }
 
-- (void)logMessage:(NSArray *)args severity:(NSString *)severity
+- (bool) isNSBoolean:(id)object
 {
-  NSLog(@"[%@] %@", [severity uppercaseString], [args componentsJoinedByString:@" "]);
+    return [object isKindOfClass:[@YES class]];
+}
+
+- (void)logMessage:(id)args severity:(NSString *)severity
+{
+  if (args == nil) {
+    args = @[@"null"];
+  }
+  else if (!([args isKindOfClass:[NSArray class]])) {
+    args = @[args];
+  }
+    // If the arg is an NSNumber wrapping a BOOL we should print the string equivalent for the boolean!
+    NSMutableArray *newArray = [NSMutableArray array];
+    [args enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([self isNSBoolean:obj]) {
+            [newArray addObject:[NSString stringWithFormat:[obj boolValue] ? @"true" : @"false"]];
+        } else {
+            [newArray addObject:obj];
+        }
+    }];
+  NSLog(@"[%@] %@", [severity uppercaseString], [newArray componentsJoinedByString:@" "]);
 }
 
 - (id)transform:(id)arg
@@ -30,17 +50,17 @@
   return arg;
 }
 
-- (void)debug:(NSArray *)args
+- (void)debug:(id)args
 {
   [self logMessage:args severity:@"debug"];
 }
 
-- (void)info:(NSArray *)args
+- (void)info:(id)args
 {
   [self logMessage:args severity:@"info"];
 }
 
-- (void)warn:(NSArray *)args
+- (void)warn:(id)args
 {
   [self logMessage:args severity:@"warn"];
 }
@@ -50,34 +70,38 @@
   [self logMessage:args severity:@"error"];
 }
 
-- (void)trace:(NSArray *)args
+- (void)trace:(id)args
 {
   [self logMessage:args severity:@"trace"];
 }
 
-- (void)timestamp:(NSArray *)args
+- (void)timestamp:(id)args
 {
-  NSLog(@"[TIMESTAMP] %f %@", [NSDate timeIntervalSinceReferenceDate], [self transform:[args objectAtIndex:0]]);
+  id firstArg = args;
+  if ([args isKindOfClass:[NSArray class]]) {
+    firstArg = [args objectAtIndex:0];
+  }
+  NSLog(@"[TIMESTAMP] %f %@", [NSDate timeIntervalSinceReferenceDate], [self transform:firstArg]);
   fflush(stderr);
 }
 
-- (void)notice:(NSArray *)args
+- (void)notice:(id)args
 {
   [self logMessage:args severity:@"info"];
 }
 
-- (void)critical:(NSArray *)args
+- (void)critical:(id)args
 {
   [self logMessage:args severity:@"error"];
 }
 
-- (void)log:(NSArray *)args
+- (void)log:(id)level withMessage:(id)args
 {
-  if ([args count] > 1) {
-    [self logMessage:[args subarrayWithRange:NSMakeRange(1, [args count] - 1)] severity:[args objectAtIndex:0]];
-  } else {
-    [self logMessage:args severity:@"info"];
-  }
+    if (args == nil) {
+        [self logMessage:level severity:@"info"];
+    } else {
+        [self logMessage:args severity:level];
+    }
 }
 
 - (void)reportUnhandledException:(NSArray *)args

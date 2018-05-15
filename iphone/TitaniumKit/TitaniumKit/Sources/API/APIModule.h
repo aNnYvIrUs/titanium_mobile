@@ -1,86 +1,81 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2018 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-#import "TiModule.h"
+#import <JavaScriptCore/JavaScriptCore.h>
+#import <TitaniumKit/TiModule.h>
 
-/**
- The Ti.API core-module that is used to log messages, exceptions.
- */
-@interface APIModule : TiModule
+@protocol APIExports <JSExport>
 
-/**
- Logs a new message with a given severity. Used internally by TiConsole.
- 
- @param args An array of messages.
- @param severity The severity of the log messages.
- */
-- (void)logMessage:(NSArray *)args severity:(NSString *)severity;
+@property (readonly) NSString *apiName;
 
 /**
  Logs a new debug message to the console.
- 
+
  @param args The message to log.
  */
-- (void)debug:(NSArray *)args;
+- (void)debug:(id)args;
 
 /**
  Logs a new info message to the console.
- 
+
  @param args The message to log.
  */
-- (void)info:(NSArray *)args;
+- (void)info:(id)args;
 
 /**
  Logs a new warn message to the console.
- 
+
  @param args The message to log.
  */
-- (void)warn:(NSArray *)args;
+- (void)warn:(id)args;
 
 /**
  Logs a new error message to the console.
- 
+
  @param args The message to log.
  */
-- (void)error:(NSArray *)args;
+- (void)error:(id)args;
 
 /**
  Logs a new trace message to the console.
- 
+
  @param args The message to log.
  */
-- (void)trace:(NSArray *)args;
+- (void)trace:(id)args;
 
 /**
  Logs the current timestamp to the console.
- 
+
  @param args An optional argument containing a dictionary that represents
              the error message linked to this timestamp.
  */
-- (void)timestamp:(NSArray *)args;
+- (void)timestamp:(id)args;
 
 /**
  Logs a notice to the console. Identical to `info:`.
- 
+
  @param args The message to log.
  */
-- (void)notice:(NSArray *)args;
+- (void)notice:(id)args;
 
 /**
  Logs a critical message to the console.
- 
+
  @param args The message to log. Identical to `error:`.
  */
-- (void)critical:(NSArray *)args;
-
+- (void)critical:(id)args;
+JSExportAs(log,
 /**
- Logs a default log message to the console.
- 
- @param args The message to log.
+ Logs a new message with a given severity. Used internally by TiConsole.
+
+ @param args An array of messages.
+ @param severity The severity of the log messages.
  */
-- (void)log:(NSArray *)args;
+- (void)log:(id)level withMessage:(id)args
+);
+- (void)reportUnhandledException:(NSArray *)args;
 
 @end
