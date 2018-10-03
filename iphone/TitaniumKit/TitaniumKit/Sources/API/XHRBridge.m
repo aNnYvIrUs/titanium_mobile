@@ -82,7 +82,7 @@ static XHRBridge *xhrBridge = nil;
   } else if ([method isEqualToString:@"log"]) {
     NSString *level = [event objectForKey:@"level"];
     NSString *message = [event objectForKey:@"message"];
-    [tiModule performSelector:@selector(log:) withObject:[NSArray arrayWithObjects:level, message, nil]];
+    [tiModule performSelector:@selector(log:withMessage:) withObject:level withObject:message];
   } else {
     executed = NO;
   }

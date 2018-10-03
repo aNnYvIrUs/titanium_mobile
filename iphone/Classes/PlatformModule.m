@@ -277,46 +277,34 @@ NSString *const DATA_IFACE = @"pdp_ip0";
   return [NSNumber numberWithDouble:((vm_page_size * vmStats.free_count) / 1024.0) / 1024.0];
 }
 
-- (BOOL)openURL:(NSString *)newUrlString
+- (BOOL)openURL:(NSString *)url withOptions:(id)options andCallback:(JSValue *)callback
 {
-  NSURL *newUrl = [TiUtils toURL:newUrlString proxy:self];
-<<<<<<< HEAD
+  NSURL *newUrl = [TiUtils toURL:url proxy:self];
   BOOL result = NO;
 
   // iOS 10+
-  KrollCallback *callback = nil;
-  NSMutableDictionary *options = [NSMutableDictionary dictionary];
-
-  if ([args count] >= 2) {
-    if ([[args objectAtIndex:1] isKindOfClass:[NSDictionary class]]) {
-      ENSURE_ARG_AT_INDEX(options, args, 1, NSMutableDictionary);
-      if ([args count] == 3) {
-        ENSURE_ARG_AT_INDEX(callback, args, 2, KrollCallback);
-      }
-    } else {
-      ENSURE_ARG_AT_INDEX(callback, args, 1, KrollCallback);
-    }
+  NSMutableDictionary *optionsDict = [NSMutableDictionary dictionary];
+  if ([options isKindOfClass:[NSDictionary class]]) {
+    optionsDict = (NSMutableDictionary *)options;
+  } else if ([options isKindOfClass:[JSValue class]]) {
+    callback = (JSValue *)options;
   }
 
   if (newUrl != nil) {
     if ([TiUtils isIOSVersionOrGreater:@"10.0"]) {
       [[UIApplication sharedApplication] openURL:newUrl
-                                         options:options
+                                         options:optionsDict
                                completionHandler:^(BOOL success) {
                                  if (callback != nil) {
-                                   [callback call:@[ @{ @"success" : @(success)} ] thisObject:self];
+                                   [callback callWithArguments:@[ @{ @"success" : @(success)} ]];
                                  }
                                }];
     } else {
       result = [[UIApplication sharedApplication] openURL:newUrl];
     }
-=======
-  if (newUrl != nil) {
-    return [[UIApplication sharedApplication] openURL:newUrl];
->>>>>>> 4509e76c72... - Keep Ti.Buffer impl as old-school KrollObject stuff for now, since array index accessor/setter is difficult to achieve otherwise
   }
 
-  return NO;
+  return [NSNumber numberWithBool:result];
 }
 
 - (BOOL)canOpenURL:(NSString *)arg

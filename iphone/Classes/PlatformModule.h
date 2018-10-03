@@ -9,14 +9,9 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <TitaniumKit/TiModule.h>
 
-#define READONLY_PROPERTY(type, name, upperName) \
-  @property (readonly, nonatomic) type name;     \
-  -(type)getupperName;
-
 @class TiPlatformDisplayCaps; // forward declare
 
 @protocol TiPlatformExports <JSExport>
-READONLY_PROPERTY(NSNumber *, example, Example)
 
 @property (readonly, nonatomic) NSNumber *BATTERY_STATE_CHARGING;
 @property (readonly, nonatomic) NSNumber *BATTERY_STATE_FULL;
@@ -54,7 +49,12 @@ READONLY_PROPERTY(NSNumber *, example, Example)
 - (BOOL)canOpenURL:(NSString *)url;
 - (NSString *)createUUID;
 - (BOOL)is24HourTimeFormat;
-- (BOOL)openURL:(NSString *)newUrlString;
+
+JSExportAs(openURL,
+           -(BOOL)openURL
+           : (NSString *)url withOptions
+           : (id)options andCallback
+           : (JSValue *)callback);
 
 @end
 

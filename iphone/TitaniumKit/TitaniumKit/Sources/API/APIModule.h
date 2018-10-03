@@ -4,8 +4,8 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-#import <JavaScriptCore/JavaScriptCore.h>
 #import "TiModule.h"
+#import <JavaScriptCore/JavaScriptCore.h>
 
 @protocol APIExports <JSExport>
 

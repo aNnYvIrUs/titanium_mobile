@@ -8,6 +8,7 @@
 
 #import "TiMediaSystemAlertProxy.h"
 #import <TitaniumKit/TiBlob.h>
+#import <TitaniumKit/TiFile.h>
 #import <TitaniumKit/TiUtils.h>
 
 @implementation TiMediaSystemAlertProxy
