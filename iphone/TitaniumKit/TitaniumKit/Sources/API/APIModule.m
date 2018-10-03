@@ -17,28 +17,27 @@
   return @"Ti.API";
 }
 
-- (bool) isNSBoolean:(id)object
+- (bool)isNSBoolean:(id)object
 {
-    return [object isKindOfClass:[@YES class]];
+  return [object isKindOfClass:[@YES class]];
 }
 
 - (void)logMessage:(id)args severity:(NSString *)severity
 {
   if (args == nil) {
-    args = @[@"null"];
+    args = @[ @"null" ];
+  } else if (!([args isKindOfClass:[NSArray class]])) {
+    args = @[ args ];
   }
-  else if (!([args isKindOfClass:[NSArray class]])) {
-    args = @[args];
-  }
-    // If the arg is an NSNumber wrapping a BOOL we should print the string equivalent for the boolean!
-    NSMutableArray *newArray = [NSMutableArray array];
-    [args enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([self isNSBoolean:obj]) {
-            [newArray addObject:[NSString stringWithFormat:[obj boolValue] ? @"true" : @"false"]];
-        } else {
-            [newArray addObject:obj];
-        }
-    }];
+  // If the arg is an NSNumber wrapping a BOOL we should print the string equivalent for the boolean!
+  NSMutableArray *newArray = [NSMutableArray array];
+  [args enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    if ([self isNSBoolean:obj]) {
+      [newArray addObject:[NSString stringWithFormat:[obj boolValue] ? @"true" : @"false"]];
+    } else {
+      [newArray addObject:obj];
+    }
+  }];
   NSLog(@"[%@] %@", [severity uppercaseString], [newArray componentsJoinedByString:@" "]);
 }
 
@@ -97,11 +96,11 @@
 
 - (void)log:(id)level withMessage:(id)args
 {
-    if (args == nil) {
-        [self logMessage:level severity:@"info"];
-    } else {
-        [self logMessage:args severity:level];
-    }
+  if (args == nil) {
+    [self logMessage:level severity:@"info"];
+  } else {
+    [self logMessage:args severity:level];
+  }
 }
 
 - (void)reportUnhandledException:(NSArray *)args

@@ -68,14 +68,15 @@
  */
 - (void)critical:(id)args;
 JSExportAs(log,
-/**
+           /**
  Logs a new message with a given severity. Used internally by TiConsole.
 
  @param args An array of messages.
  @param severity The severity of the log messages.
  */
-- (void)log:(id)level withMessage:(id)args
-);
+           -(void)log
+           : (id)level withMessage
+           : (id)args);
 - (void)reportUnhandledException:(NSArray *)args;
 
 @end

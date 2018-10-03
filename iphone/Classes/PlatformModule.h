@@ -6,17 +6,17 @@
  */
 #ifdef USE_TI_PLATFORM
 
-#import <TitaniumKit/TiModule.h>
 #import <JavaScriptCore/JavaScriptCore.h>
+#import <TitaniumKit/TiModule.h>
 
 #define READONLY_PROPERTY(type, name, upperName) \
-@property (readonly, nonatomic) type name;       \
-- (type) getupperName;
+  @property (readonly, nonatomic) type name;     \
+  -(type)getupperName;
 
 @class TiPlatformDisplayCaps; // forward declare
 
 @protocol TiPlatformExports <JSExport>
-READONLY_PROPERTY(NSNumber*, example, Example)
+READONLY_PROPERTY(NSNumber *, example, Example)
 
 @property (readonly, nonatomic) NSNumber *BATTERY_STATE_CHARGING;
 @property (readonly, nonatomic) NSNumber *BATTERY_STATE_FULL;
@@ -59,7 +59,7 @@ READONLY_PROPERTY(NSNumber*, example, Example)
 @end
 
 @interface PlatformModule : TiModule <TiPlatformExports> {
-    BOOL batteryEnabled;
+  BOOL batteryEnabled;
 }
 @end
 

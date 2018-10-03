@@ -6,8 +6,8 @@
  */
 #ifdef USE_TI_PLATFORM
 
-#import <TitaniumKit/TiModule.h>
 #import <JavaScriptCore/JavaScriptCore.h>
+#import <TitaniumKit/TiModule.h>
 
 @protocol TiPlatformDisplayCapsExports <JSExport>
 

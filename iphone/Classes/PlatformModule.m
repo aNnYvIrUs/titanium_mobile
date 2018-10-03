@@ -106,10 +106,10 @@ NSString *const DATA_IFACE = @"pdp_ip0";
   RELEASE_TO_NIL(architecture);
   RELEASE_TO_NIL(processorCount);
   RELEASE_TO_NIL(username);
-//  RELEASE_TO_NIL(address);
+  //  RELEASE_TO_NIL(address);
   RELEASE_TO_NIL(ostype);
   RELEASE_TO_NIL(availableMemory);
-//  RELEASE_TO_NIL(capabilities);
+  //  RELEASE_TO_NIL(capabilities);
   [super dealloc];
 }
 
@@ -233,12 +233,12 @@ NSString *const DATA_IFACE = @"pdp_ip0";
 #else
 - (BOOL)isAdvertisingTrackingEnabled
 {
-    return NO;
+  return NO;
 }
 
 - (NSString *)identifierForAdvertising
 {
-    return @"";
+  return @"";
 }
 #endif
 
@@ -327,15 +327,15 @@ NSString *const DATA_IFACE = @"pdp_ip0";
 
 - (TiPlatformDisplayCaps *)DisplayCaps
 {
-    return [self displayCaps];
+  return [self displayCaps];
 }
 
 - (TiPlatformDisplayCaps *)displayCaps
 {
-//  if (capabilities == nil) {
-    return [[[TiPlatformDisplayCaps alloc] init] autorelease];
-//  }
-//  return capabilities;
+  //  if (capabilities == nil) {
+  return [[[TiPlatformDisplayCaps alloc] init] autorelease];
+  //  }
+  //  return capabilities;
 }
 
 - (void)setBatteryMonitoring:(NSNumber *)yn
@@ -447,7 +447,7 @@ MAKE_SYSTEM_PROP(BATTERY_STATE_FULL, UIDeviceBatteryStateFull);
 
 - (void)didReceiveMemoryWarning:(NSNotification *)notification
 {
-//  RELEASE_TO_NIL(capabilities);
+  //  RELEASE_TO_NIL(capabilities);
   [super didReceiveMemoryWarning:notification];
 }
 

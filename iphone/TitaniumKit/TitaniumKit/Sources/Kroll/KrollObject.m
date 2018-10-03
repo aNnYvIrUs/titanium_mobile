@@ -235,13 +235,13 @@ JSValueRef KrollGetProperty(JSContextRef jsContext, JSObjectRef object, JSString
         return remoteFunction;
       }
     }
-      
+
     // TODO USe a marking protocol to skip when
-      if ([result conformsToProtocol:@protocol(JSExport)]) {
-          JSContext *objcContext = [JSContext contextWithJSGlobalContextRef:[[o context] context]];
-          return [[JSValue valueWithObject:result inContext:objcContext] JSValueRef];
-      }
-      
+    if ([result conformsToProtocol:@protocol(JSExport)]) {
+      JSContext *objcContext = [JSContext contextWithJSGlobalContextRef:[[o context] context]];
+      return [[JSValue valueWithObject:result inContext:objcContext] JSValueRef];
+    }
+
     JSValueRef jsResult = ConvertIdTiValue([o context], result);
     if (([result isKindOfClass:[KrollObject class]] && ![result isKindOfClass:[KrollCallback class]] && [[result target] isKindOfClass:[TiProxy class]])
         || ([result isKindOfClass:[TiProxy class]])) {

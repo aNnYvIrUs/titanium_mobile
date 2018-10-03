@@ -26,7 +26,7 @@ extern NSString *TitaniumModuleRequireFormat;
   NSDictionary *preload;
   NSMutableDictionary *modules;
   NSMutableDictionary *pathCache;
-//  TitaniumObject *titanium;
+  //  TitaniumObject *titanium;
   KrollObject *console;
   BOOL shutdown;
   BOOL evaluationError;

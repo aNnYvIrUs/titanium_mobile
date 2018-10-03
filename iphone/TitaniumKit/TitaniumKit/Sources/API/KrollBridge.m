@@ -9,6 +9,7 @@
 #import "KrollCallback.h"
 #import "KrollContext.h"
 #import "KrollObject.h"
+#import "PlatformModule.h"
 #import "TiApp.h"
 #import "TiConsole.h"
 #import "TiExceptionHandler.h"
@@ -16,7 +17,6 @@
 #import "TiSharedConfig.h"
 #import "TiUtils.h"
 #import "TopTiModule.h"
-#import "PlatformModule.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <libkern/OSAtomic.h>
 
@@ -31,7 +31,6 @@ NSString *TitaniumModuleRequireFormat = @"(function(exports){"
 
 //Defined private method inside TiBindingRunLoop.m (Perhaps to move to .c?)
 void TiBindingRunLoopAnnounceStart(TiBindingRunLoop runLoop);
-
 
 OSSpinLock krollBridgeRegistryLock = OS_SPINLOCK_INIT;
 CFMutableSetRef krollBridgeRegistry = nil;
@@ -172,7 +171,7 @@ CFMutableSetRef krollBridgeRegistry = nil;
   [self removeProxies];
   RELEASE_TO_NIL(preload);
   RELEASE_TO_NIL(context);
-//  RELEASE_TO_NIL(titanium);
+  //  RELEASE_TO_NIL(titanium);
   OSSpinLockLock(&krollBridgeRegistryLock);
   CFSetRemoveValue(krollBridgeRegistry, self);
   OSSpinLockUnlock(&krollBridgeRegistryLock);
@@ -354,7 +353,7 @@ CFMutableSetRef krollBridgeRegistry = nil;
 - (void)gc
 {
   [context gc];
-//  [titanium gc];
+  //  [titanium gc];
 }
 
 #pragma mark Delegate
@@ -385,140 +384,147 @@ CFMutableSetRef krollBridgeRegistry = nil;
   TopTiModule *module = [[[TopTiModule alloc] init] autorelease];
   JSValue *titanium = [JSValue valueWithObject:module inContext:objcJSContext];
   NSDictionary *dictionary = @{
-                                 JSPropertyDescriptorEnumerableKey : @NO,
-                                 JSPropertyDescriptorWritableKey : @YES,
-                                 JSPropertyDescriptorConfigurableKey : @NO,
-                                 JSPropertyDescriptorValueKey : titanium
-                               };
+    JSPropertyDescriptorEnumerableKey : @NO,
+    JSPropertyDescriptorWritableKey : @YES,
+    JSPropertyDescriptorConfigurableKey : @NO,
+    JSPropertyDescriptorValueKey : titanium
+  };
   [[objcJSContext globalObject] defineProperty:@"Titanium" descriptor:dictionary];
   [[objcJSContext globalObject] defineProperty:@"Ti" descriptor:dictionary];
 
-    // Hack the old-school way of doing a module here
-    NSArray *legacyModuleNames = @[@"Accelerometer",
-                                   @"Analytics",
-                                   @"App",
-                                   @"Calendar",
-                                   @"Codec",
-                                   @"Contacts",
-                                   @"Database",
-                                   @"Filesystem",
-                                   @"Geolocation",
-                                   @"Gesture",
-                                   @"Locale",
-                                   @"Media",
-                                   @"Network",
-                                   @"Stream",
-                                   @"UI",
-                                   @"Utils",
-                                   @"XML",
-                                   @"Yahoo"];
-    for (id name in legacyModuleNames) {
-        // We must generate the block and copy it to put it into heap or else every instance of the block shares
-        // the same "name" value. See https://stackoverflow.com/questions/7750907/blocks-loops-and-local-variables
-        JSValue *(^lazyLoad)() = ^() {
-            JSValue *result;
-            TiModule *mod = [host moduleNamed:name context:self];
-            if (mod != nil) {
-              KrollObject *ko = [self registerProxy:mod];
-              result = [JSValue valueWithJSValueRef:[ko jsobject] inContext:[JSContext currentContext]];
-            } else {
-                result = [JSValue valueWithUndefinedInContext:[JSContext currentContext]];
-            }
-            [[JSContext currentThis] defineProperty:name descriptor:@{
-              JSPropertyDescriptorValueKey:result,
-              JSPropertyDescriptorWritableKey:@NO,
-              JSPropertyDescriptorEnumerableKey:@NO,
-              JSPropertyDescriptorConfigurableKey:@NO
-            }];
-            return result;
-        };
-        [titanium defineProperty:name descriptor:@{
-           JSPropertyDescriptorConfigurableKey:@YES,
-           JSPropertyDescriptorGetKey : [[lazyLoad copy] autorelease]
-        }];
-    }
-
-    // New JSExport based modules
-    // Basically a whitelist of Ti.* modules to load lazily
-    NSArray *moduleNames = @[@"API", @"Platform"];
-    for (id name in moduleNames) {
-        // We must generate the block and copy it to put it into heap or else every instance of the block shares
-        // the same "name" value. See https://stackoverflow.com/questions/7750907/blocks-loops-and-local-variables
-        JSValue *(^lazyLoad)() = ^() {
-            JSValue *result;
-            Class moduleClass = NSClassFromString([NSString stringWithFormat:@"%@Module", name]);
-            if (moduleClass != nil) {
-                result = [JSValue valueWithObject:[[moduleClass alloc] _initWithPageContext:self] inContext:[JSContext currentContext]];
-            } else {
-                result = [JSValue valueWithUndefinedInContext:[JSContext currentContext]];
-            }
-            [[JSContext currentThis] defineProperty:name descriptor:@{
-              JSPropertyDescriptorValueKey:result,
-              JSPropertyDescriptorWritableKey:@NO,
-              JSPropertyDescriptorEnumerableKey:@NO,
-              JSPropertyDescriptorConfigurableKey:@NO
-            }];
-            return result;
-        };
-        [titanium defineProperty:name descriptor:@{
-          JSPropertyDescriptorConfigurableKey:@YES,
-          JSPropertyDescriptorGetKey : [[lazyLoad copy] autorelease]
-        }];
-    }
-
-    // FIXME Re-enable analytics setters here
-    if ([[TiSharedConfig defaultConfig] isAnalyticsEnabled]) {
-      APSAnalytics *sharedAnalytics = [APSAnalytics sharedInstance];
-      NSString *buildType = [[TiSharedConfig defaultConfig] applicationBuildType];
-      NSString *deployType = [[TiSharedConfig defaultConfig] applicationDeployType];
-      NSString *guid = [[TiSharedConfig defaultConfig] applicationGUID];
-      if (buildType != nil || buildType.length > 0) {
-        [sharedAnalytics performSelector:@selector(setBuildType:) withObject:buildType];
+  // Hack the old-school way of doing a module here
+  NSArray *legacyModuleNames = @[ @"Accelerometer",
+    @"Analytics",
+    @"App",
+    @"Calendar",
+    @"Codec",
+    @"Contacts",
+    @"Database",
+    @"Filesystem",
+    @"Geolocation",
+    @"Gesture",
+    @"Locale",
+    @"Media",
+    @"Network",
+    @"Stream",
+    @"UI",
+    @"Utils",
+    @"XML",
+    @"Yahoo" ];
+  for (id name in legacyModuleNames) {
+    // We must generate the block and copy it to put it into heap or else every instance of the block shares
+    // the same "name" value. See https://stackoverflow.com/questions/7750907/blocks-loops-and-local-variables
+    JSValue * (^lazyLoad)() = ^() {
+      JSValue *result;
+      TiModule *mod = [host moduleNamed:name context:self];
+      if (mod != nil) {
+        KrollObject *ko = [self registerProxy:mod];
+        result = [JSValue valueWithJSValueRef:[ko jsobject] inContext:[JSContext currentContext]];
+      } else {
+        result = [JSValue valueWithUndefinedInContext:[JSContext currentContext]];
       }
-      [sharedAnalytics performSelector:@selector(setSDKVersion:) withObject:[NSString stringWithFormat:@"ti.%@", [module performSelector:@selector(version)]]];
-      [sharedAnalytics enableWithAppKey:guid andDeployType:deployType];
+      [[JSContext currentThis] defineProperty:name
+                                   descriptor:@{
+                                     JSPropertyDescriptorValueKey : result,
+                                     JSPropertyDescriptorWritableKey : @NO,
+                                     JSPropertyDescriptorEnumerableKey : @NO,
+                                     JSPropertyDescriptorConfigurableKey : @NO
+                                   }];
+      return result;
+    };
+    [titanium defineProperty:name
+                  descriptor:@{
+                    JSPropertyDescriptorConfigurableKey : @YES,
+                    JSPropertyDescriptorGetKey : [[lazyLoad copy] autorelease]
+                  }];
+  }
+
+  // New JSExport based modules
+  // Basically a whitelist of Ti.* modules to load lazily
+  NSArray *moduleNames = @[ @"API", @"Platform" ];
+  for (id name in moduleNames) {
+    // We must generate the block and copy it to put it into heap or else every instance of the block shares
+    // the same "name" value. See https://stackoverflow.com/questions/7750907/blocks-loops-and-local-variables
+    JSValue * (^lazyLoad)() = ^() {
+      JSValue *result;
+      Class moduleClass = NSClassFromString([NSString stringWithFormat:@"%@Module", name]);
+      if (moduleClass != nil) {
+        result = [JSValue valueWithObject:[[moduleClass alloc] _initWithPageContext:self] inContext:[JSContext currentContext]];
+      } else {
+        result = [JSValue valueWithUndefinedInContext:[JSContext currentContext]];
+      }
+      [[JSContext currentThis] defineProperty:name
+                                   descriptor:@{
+                                     JSPropertyDescriptorValueKey : result,
+                                     JSPropertyDescriptorWritableKey : @NO,
+                                     JSPropertyDescriptorEnumerableKey : @NO,
+                                     JSPropertyDescriptorConfigurableKey : @NO
+                                   }];
+      return result;
+    };
+    [titanium defineProperty:name
+                  descriptor:@{
+                    JSPropertyDescriptorConfigurableKey : @YES,
+                    JSPropertyDescriptorGetKey : [[lazyLoad copy] autorelease]
+                  }];
+  }
+
+  // FIXME Re-enable analytics setters here
+  if ([[TiSharedConfig defaultConfig] isAnalyticsEnabled]) {
+    APSAnalytics *sharedAnalytics = [APSAnalytics sharedInstance];
+    NSString *buildType = [[TiSharedConfig defaultConfig] applicationBuildType];
+    NSString *deployType = [[TiSharedConfig defaultConfig] applicationDeployType];
+    NSString *guid = [[TiSharedConfig defaultConfig] applicationGUID];
+    if (buildType != nil || buildType.length > 0) {
+      [sharedAnalytics performSelector:@selector(setBuildType:) withObject:buildType];
     }
+    [sharedAnalytics performSelector:@selector(setSDKVersion:) withObject:[NSString stringWithFormat:@"ti.%@", [module performSelector:@selector(version)]]];
+    [sharedAnalytics enableWithAppKey:guid andDeployType:deployType];
+  }
 
   // Load the "console" object into the global scope
   objcJSContext[@"console"] = [[TiConsole alloc] init];
 
   // Make the global object itself available under the name "global"
-  [[objcJSContext globalObject] defineProperty:@"global" descriptor:@{
-                                                                        JSPropertyDescriptorEnumerableKey : @NO,
-                                                                        JSPropertyDescriptorWritableKey : @NO,
-                                                                        JSPropertyDescriptorConfigurableKey : @NO,
-                                                                        JSPropertyDescriptorValueKey : [objcJSContext globalObject]
-                                                                      }];
+  [[objcJSContext globalObject] defineProperty:@"global"
+                                    descriptor:@{
+                                      JSPropertyDescriptorEnumerableKey : @NO,
+                                      JSPropertyDescriptorWritableKey : @NO,
+                                      JSPropertyDescriptorConfigurableKey : @NO,
+                                      JSPropertyDescriptorValueKey : [objcJSContext globalObject]
+                                    }];
   // Set the __dirname and __filename for the app.js.
   // For other files, it will be injected via the `TitaniumModuleRequireFormat` property
-  [[objcJSContext globalObject] defineProperty:@"__dirname" descriptor:@{
-                                                                        JSPropertyDescriptorEnumerableKey : @NO,
-                                                                        JSPropertyDescriptorWritableKey : @NO,
-                                                                        JSPropertyDescriptorConfigurableKey : @NO,
-                                                                        JSPropertyDescriptorValueKey : @"/"
-                                                                      }];
-  [[objcJSContext globalObject] defineProperty:@"__filename" descriptor:@{
-                                                                        JSPropertyDescriptorEnumerableKey : @NO,
-                                                                        JSPropertyDescriptorWritableKey : @NO,
-                                                                        JSPropertyDescriptorConfigurableKey : @NO,
-                                                                        JSPropertyDescriptorValueKey : @"/app.js"
-                                                                      }];
+  [[objcJSContext globalObject] defineProperty:@"__dirname"
+                                    descriptor:@{
+                                      JSPropertyDescriptorEnumerableKey : @NO,
+                                      JSPropertyDescriptorWritableKey : @NO,
+                                      JSPropertyDescriptorConfigurableKey : @NO,
+                                      JSPropertyDescriptorValueKey : @"/"
+                                    }];
+  [[objcJSContext globalObject] defineProperty:@"__filename"
+                                    descriptor:@{
+                                      JSPropertyDescriptorEnumerableKey : @NO,
+                                      JSPropertyDescriptorWritableKey : @NO,
+                                      JSPropertyDescriptorConfigurableKey : @NO,
+                                      JSPropertyDescriptorValueKey : @"/app.js"
+                                    }];
 
   //if we have a preload dictionary, register those static key/values into our namespace
   if (preload != nil) {
     for (NSString *name in preload) {
-        // FIXME Re-enable?
-//      KrollObject *ti = (KrollObject *)[titanium valueForKey:name];
-//      NSDictionary *values = [preload valueForKey:name];
-//      for (id key in values) {
-//        id target = [values objectForKey:key];
-//        KrollObject *ko = [self krollObjectForProxy:target];
-//        if (ko == nil) {
-//          ko = [self registerProxy:target];
-//        }
-//        [ti noteKrollObject:ko forKey:key];
-//        [ti setStaticValue:ko forKey:key purgable:NO];
-//      }
+      // FIXME Re-enable?
+      //      KrollObject *ti = (KrollObject *)[titanium valueForKey:name];
+      //      NSDictionary *values = [preload valueForKey:name];
+      //      for (id key in values) {
+      //        id target = [values objectForKey:key];
+      //        KrollObject *ko = [self krollObjectForProxy:target];
+      //        if (ko == nil) {
+      //          ko = [self registerProxy:target];
+      //        }
+      //        [ti noteKrollObject:ko forKey:key];
+      //        [ti setStaticValue:ko forKey:key purgable:NO];
+      //      }
     }
     //We need to run this before the app.js, which means it has to be here.
     TiBindingRunLoopAnnounceStart(kroll);
@@ -557,7 +563,7 @@ CFMutableSetRef krollBridgeRegistry = nil;
     NSNotification *notification = [NSNotification notificationWithName:kTiContextShutdownNotification object:self];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
   }
-//  [titanium gc];
+  //  [titanium gc];
 
   if (shutdownCondition) {
     [shutdownCondition lock];
@@ -574,7 +580,7 @@ CFMutableSetRef krollBridgeRegistry = nil;
   },
       NO);
   [self removeProxies];
-//  RELEASE_TO_NIL(titanium);
+  //  RELEASE_TO_NIL(titanium);
   RELEASE_TO_NIL(console);
   RELEASE_TO_NIL(context);
   RELEASE_TO_NIL(preload);
