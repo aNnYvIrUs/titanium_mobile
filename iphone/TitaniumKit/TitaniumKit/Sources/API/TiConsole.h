@@ -5,7 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import <TitaniumKit/APIModule.h>
+#import "APIModule.h"
 
 // This is a version of the API module which has custom support for log() to
 // make it behave like standard console.log(). This can be removed once we

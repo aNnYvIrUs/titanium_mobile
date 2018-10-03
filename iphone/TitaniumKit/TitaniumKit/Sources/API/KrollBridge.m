@@ -9,7 +9,6 @@
 #import "KrollCallback.h"
 #import "KrollContext.h"
 #import "KrollObject.h"
-#import "PlatformModule.h"
 #import "TiApp.h"
 #import "TiConsole.h"
 #import "TiExceptionHandler.h"
@@ -411,7 +410,7 @@ CFMutableSetRef krollBridgeRegistry = nil;
     @"Utils",
     @"XML",
     @"Yahoo" ];
-  for (id name in legacyModuleNames) {
+  for (NSString *name in legacyModuleNames) {
     // We must generate the block and copy it to put it into heap or else every instance of the block shares
     // the same "name" value. See https://stackoverflow.com/questions/7750907/blocks-loops-and-local-variables
     JSValue * (^lazyLoad)() = ^() {
@@ -442,7 +441,7 @@ CFMutableSetRef krollBridgeRegistry = nil;
   // New JSExport based modules
   // Basically a whitelist of Ti.* modules to load lazily
   NSArray *moduleNames = @[ @"API", @"Platform" ];
-  for (id name in moduleNames) {
+  for (NSString *name in moduleNames) {
     // We must generate the block and copy it to put it into heap or else every instance of the block shares
     // the same "name" value. See https://stackoverflow.com/questions/7750907/blocks-loops-and-local-variables
     JSValue * (^lazyLoad)() = ^() {

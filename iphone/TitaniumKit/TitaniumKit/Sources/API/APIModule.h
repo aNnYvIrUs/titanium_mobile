@@ -5,7 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  */
 #import <JavaScriptCore/JavaScriptCore.h>
-#import <TitaniumKit/TiModule.h>
+#import "TiModule.h"
 
 @protocol APIExports <JSExport>
 
@@ -79,4 +79,8 @@ JSExportAs(log,
            : (id)args);
 - (void)reportUnhandledException:(NSArray *)args;
 
+@end
+
+@interface APIModule : TiModule <APIExports>
+- (void)logMessage:(id)messages severity:(NSString *)severity; // Used by TiConsole
 @end
