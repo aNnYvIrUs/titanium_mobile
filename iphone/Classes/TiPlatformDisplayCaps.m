@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2018 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -25,6 +25,11 @@
   return @"medium";
 }
 
+- (NSNumber *)getDensity
+{
+  return [self density];
+}
+
 - (NSString *)apiName
 {
   return @"Ti.Platform.DisplayCaps";
@@ -33,6 +38,11 @@
 - (NSNumber *)dpi
 {
   return [NSNumber numberWithInt:[TiUtils dpi]];
+}
+
+- (NSNumber *)getDpi
+{
+  return [self dpi];
 }
 
 // TODO Remove? Not in our docs!
@@ -55,15 +65,30 @@
   return [NSNumber numberWithFloat:mainScreenBounds.size.width];
 }
 
+- (NSNumber *)getPlatformWidth
+{
+  return [self platformWidth];
+}
+
 - (NSNumber *)platformHeight
 {
   CGRect mainScreenBounds = [[UIScreen mainScreen] bounds];
   return [NSNumber numberWithFloat:mainScreenBounds.size.height];
 }
 
+- (NSNumber *)getPlatformHeight
+{
+  return [self platformHeight];
+}
+
 - (NSNumber *)logicalDensityFactor
 {
   return [NSNumber numberWithFloat:[[UIScreen mainScreen] scale]];
+}
+
+- (NSNumber *)getLogicalDensityFactor
+{
+  return [self logicalDensityFactor];
 }
 @end
 
