@@ -4,7 +4,6 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-
 #import "TiConsole.h"
 #import "TiBase.h"
 
@@ -12,7 +11,7 @@
 
 - (void)log:(id)level withMessage:(id)args
 {
-  [self logMessage:level severity:@"info"];
+  [self info:level];
 }
 
 - (void)time:(NSString *)label

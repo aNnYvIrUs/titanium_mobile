@@ -5,10 +5,8 @@
  * Please see the LICENSE included with this distribution for details.
  */
 #import "APIModule.h"
-//#import "TiApp.h"
-//#import "TiBase.h"
+#import "TiBase.h"
 #import "TiExceptionHandler.h"
-//#import "TiUtils.h"
 
 @implementation APIModule
 

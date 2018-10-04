@@ -375,25 +375,25 @@ CFMutableSetRef krollBridgeRegistry = nil;
 
   JSGlobalContextRef jsContext = [kroll context];
   JSContext *objcJSContext = [JSContext contextWithJSGlobalContextRef:jsContext];
-  
+  JSValue *global = [objcJSContext globalObject];
   // Make the global object itself available under the name "global"
-  [[objcJSContext globalObject] defineProperty:@"global"
+  [global defineProperty:@"global"
                                     descriptor:@{
                                                  JSPropertyDescriptorEnumerableKey : @NO,
                                                  JSPropertyDescriptorWritableKey : @NO,
                                                  JSPropertyDescriptorConfigurableKey : @NO,
-                                                 JSPropertyDescriptorValueKey : [objcJSContext globalObject]
+                                                 JSPropertyDescriptorValueKey : global
                                                  }];
   // Set the __dirname and __filename for the app.js.
   // For other files, it will be injected via the `TitaniumModuleRequireFormat` property
-  [[objcJSContext globalObject] defineProperty:@"__dirname"
+  [global defineProperty:@"__dirname"
                                     descriptor:@{
                                                  JSPropertyDescriptorEnumerableKey : @NO,
                                                  JSPropertyDescriptorWritableKey : @NO,
                                                  JSPropertyDescriptorConfigurableKey : @NO,
                                                  JSPropertyDescriptorValueKey : @"/"
                                                  }];
-  [[objcJSContext globalObject] defineProperty:@"__filename"
+  [global defineProperty:@"__filename"
                                     descriptor:@{
                                                  JSPropertyDescriptorEnumerableKey : @NO,
                                                  JSPropertyDescriptorWritableKey : @NO,
@@ -404,7 +404,7 @@ CFMutableSetRef krollBridgeRegistry = nil;
 //  NSString *basePath = (url == nil) ? [TiHost resourcePath] : [[[url path] stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"."];
 //  NSURL *baseURL = [NSURL fileURLWithPath:basePath];
   // Now define "Ti" and "Titanium"
-  TopTiModule *module = [[[TopTiModule alloc] init] autorelease];
+  TopTiModule *module = [[TopTiModule alloc] init];
   JSValue *titanium = [JSValue valueWithObject:module inContext:objcJSContext];
   NSDictionary *dictionary = @{
     JSPropertyDescriptorEnumerableKey : @NO,
@@ -412,8 +412,8 @@ CFMutableSetRef krollBridgeRegistry = nil;
     JSPropertyDescriptorConfigurableKey : @NO,
     JSPropertyDescriptorValueKey : titanium
   };
-  [[objcJSContext globalObject] defineProperty:@"Titanium" descriptor:dictionary];
-  [[objcJSContext globalObject] defineProperty:@"Ti" descriptor:dictionary];
+  [global defineProperty:@"Titanium" descriptor:dictionary];
+  [global defineProperty:@"Ti" descriptor:dictionary];
 
   // Hack the old-school way of doing a module here
   NSArray *legacyModuleNames = @[ @"Accelerometer",
@@ -472,7 +472,12 @@ CFMutableSetRef krollBridgeRegistry = nil;
       JSValue *result;
       Class moduleClass = NSClassFromString([NSString stringWithFormat:@"%@Module", name]);
       if (moduleClass != nil) {
-        result = [JSValue valueWithObject:[[moduleClass alloc] init] inContext:[JSContext currentContext]];
+        // TODO Don't extend TiModule any more!
+        if ([moduleClass isSubclassOfClass:[TiModule class]]) {
+          result = [JSValue valueWithObject:[[moduleClass alloc] _initWithPageContext:self] inContext:[JSContext currentContext]];
+        } else {
+          result = [JSValue valueWithObject:[[moduleClass alloc] init] inContext:[JSContext currentContext]];
+        }
       } else {
         result = [JSValue valueWithUndefinedInContext:[JSContext currentContext]];
       }
@@ -510,7 +515,7 @@ CFMutableSetRef krollBridgeRegistry = nil;
 
   //if we have a preload dictionary, register those static key/values into our namespace
   if (preload != nil) {
-    for (NSString *name in preload) {
+//    for (NSString *name in preload) {
       // FIXME Re-enable?
       //      KrollObject *ti = (KrollObject *)[titanium valueForKey:name];
       //      NSDictionary *values = [preload valueForKey:name];
@@ -523,7 +528,7 @@ CFMutableSetRef krollBridgeRegistry = nil;
       //        [ti noteKrollObject:ko forKey:key];
       //        [ti setStaticValue:ko forKey:key purgable:NO];
       //      }
-    }
+//    }
     //We need to run this before the app.js, which means it has to be here.
     TiBindingRunLoopAnnounceStart(kroll);
     [self evalFile:[url path] callback:self selector:@selector(booted)];
