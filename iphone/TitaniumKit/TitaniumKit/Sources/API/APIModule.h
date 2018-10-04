@@ -4,12 +4,10 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
-#import "TiModule.h"
+#import "ObjcProxy.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 
 @protocol APIExports <JSExport>
-
-@property (readonly) NSString *apiName;
 
 /**
  Logs a new debug message to the console.
@@ -81,6 +79,6 @@ JSExportAs(log,
 
 @end
 
-@interface APIModule : TiModule <APIExports>
+@interface APIModule : ObjcProxy <APIExports>
 - (void)logMessage:(id)messages severity:(NSString *)severity; // Used by TiConsole
 @end

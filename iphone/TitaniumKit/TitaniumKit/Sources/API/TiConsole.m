@@ -6,6 +6,7 @@
  */
 
 #import "TiConsole.h"
+#import "TiBase.h"
 
 @implementation TiConsole
 

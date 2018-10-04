@@ -7,11 +7,10 @@
 #ifdef USE_TI_PLATFORM
 
 #import <JavaScriptCore/JavaScriptCore.h>
-#import <TitaniumKit/TiModule.h>
+#import <TitaniumKit/ObjcProxy.h>
 
 @protocol TiPlatformDisplayCapsExports <JSExport>
 
-@property (nonatomic, readonly) NSString *apiName;
 @property (nonatomic, readonly) NSString *density;
 @property (nonatomic, readonly) NSNumber *dpi;
 @property (nonatomic, readonly) NSNumber *logicalDensityFactor;
@@ -21,15 +20,15 @@
 // TODO ydpi
 
 // TODO: deprecated getters, remove in SDK 9.0.0!
--(NSString *) getDensity;
--(NSNumber *) getDpi;
--(NSNumber *) getLogicalDensityFactor;
--(NSNumber *) getPlatformHeight;
--(NSNumber *) getPlatformWidth;
+- (NSString *)getDensity;
+- (NSNumber *)getDpi;
+- (NSNumber *)getLogicalDensityFactor;
+- (NSNumber *)getPlatformHeight;
+- (NSNumber *)getPlatformWidth;
 
 @end
 
-@interface TiPlatformDisplayCaps : TiModule <TiPlatformDisplayCapsExports>
+@interface TiPlatformDisplayCaps : ObjcProxy <TiPlatformDisplayCapsExports>
 @end
 
 #endif

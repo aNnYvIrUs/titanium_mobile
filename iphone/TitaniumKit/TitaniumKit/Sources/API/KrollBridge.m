@@ -448,7 +448,7 @@ CFMutableSetRef krollBridgeRegistry = nil;
       JSValue *result;
       Class moduleClass = NSClassFromString([NSString stringWithFormat:@"%@Module", name]);
       if (moduleClass != nil) {
-        result = [JSValue valueWithObject:[[moduleClass alloc] _initWithPageContext:self] inContext:[JSContext currentContext]];
+        result = [JSValue valueWithObject:[[[moduleClass alloc] init] autorelease] inContext:[JSContext currentContext]];
       } else {
         result = [JSValue valueWithUndefinedInContext:[JSContext currentContext]];
       }

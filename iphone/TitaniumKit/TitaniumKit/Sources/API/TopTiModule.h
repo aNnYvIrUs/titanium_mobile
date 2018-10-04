@@ -1,14 +1,14 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2018 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
+#import "ObjcProxy.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 
 @protocol TiExports <JSExport>
 
-@property (readonly, nonatomic) NSString *apiName;
 @property (readonly, nonatomic) NSString *buildDate;
 @property (readonly, nonatomic) NSString *buildHash;
 @property (readwrite, nonatomic) NSString *userAgent;
@@ -26,6 +26,6 @@
 
 @end
 
-@interface TopTiModule : NSObject <TiExports>
-- (NSDictionary *)dumpCoverage:(id)unused_;
+// FIXME: Extend TiModule?
+@interface TopTiModule : ObjcProxy <TiExports>
 @end
