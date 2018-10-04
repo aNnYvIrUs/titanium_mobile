@@ -182,7 +182,7 @@
 
 /* Begin PBXFileReference section */
 		B7624B6A216663C7000C365A /* ObjcProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjcProxy.h; sourceTree = "<group>"; };
-		B7624B6B216663C7000C365A /* ObjcProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjcProxy.m; sourceTree = "<group>"; };
+		B7624B6B216663C7000C365A /* ObjcProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = ObjcProxy.m; sourceTree = "<group>"; tabWidth = 2; };
 		DB1596572075389000292B19 /* APIModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIModule.m; sourceTree = "<group>"; };
 		DB1596582075389000292B19 /* APIModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIModule.h; sourceTree = "<group>"; };
 		DB15965C2075458A00292B19 /* XHRBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHRBridge.h; sourceTree = "<group>"; };
@@ -311,7 +311,7 @@
 		DB258D191F097680000D0D8D /* Bridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bridge.h; sourceTree = "<group>"; };
 		DB258D1A1F097680000D0D8D /* Bridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bridge.m; sourceTree = "<group>"; };
 		DB258D1B1F097680000D0D8D /* KrollBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KrollBridge.h; path = ../API/KrollBridge.h; sourceTree = "<group>"; };
-		DB258D1C1F097680000D0D8D /* KrollBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KrollBridge.m; path = ../API/KrollBridge.m; sourceTree = "<group>"; };
+		DB258D1C1F097680000D0D8D /* KrollBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; name = KrollBridge.m; path = ../API/KrollBridge.m; sourceTree = "<group>"; tabWidth = 2; };
 		DB258D231F097680000D0D8D /* TiBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiBase.h; sourceTree = "<group>"; };
 		DB258D241F097680000D0D8D /* TiBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TiBase.m; sourceTree = "<group>"; };
 		DB258D401F097680000D0D8D /* TiModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TiModule.h; sourceTree = "<group>"; };

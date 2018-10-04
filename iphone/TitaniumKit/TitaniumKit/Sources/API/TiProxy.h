@@ -41,6 +41,8 @@ typedef enum {
   WebBridge
 } TiProxyBridgeType;
 
+// TODO Extract out a protocol for _baseURL method that TiProxy and ObjcProxy can implement, and can be used in place of TiProxy* in TiUtils toURL:
+
 /**
  The proxy delegate protocol
  */
@@ -207,7 +209,7 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> *target,
  Return nil if the class does not bubble or there is no parent. Optionally
  return nil if bubbleParent is false -- i.e., bubbleParent must be checked
  as well.
- 
+
  Override this method for views that do not follow the standard children/parent
  model (e.g., table rows). Note that this is NOT for use by JS, because this is
  intentionally an iOS-only solution.
@@ -217,7 +219,7 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> *target,
 /**
  Returns an array of properties that must be set on the proxy object in a specific order, ordered from first to last.
  Any properties which are not in this list are set after the listed properties, and are set in undefined order.
- 
+
  Override this method if the order in which properties are set is significant.
  @return The array of property keys.
  */
@@ -241,9 +243,9 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> *target,
 
 /**
  Tells the proxy to associate another proxy with it.
- 
+
  The associated proxy will be retained.
- Note: rememberProxy/forgetProxy are not reference counted - multiple calls to <rememberProxy:> are all undone by a single call to <forgetProxy:> 
+ Note: rememberProxy/forgetProxy are not reference counted - multiple calls to <rememberProxy:> are all undone by a single call to <forgetProxy:>
  @param rememberedProxy The proxy to remember.
  @see forgetProxy:
  */
@@ -251,9 +253,9 @@ void DoProxyDelegateReadValuesWithKeysFromProxy(UIView<TiProxyDelegate> *target,
 
 /**
  Tells the proxy to disassociate another proxy from it.
- 
+
  The deassociated proxy will be released.
- Note: rememberProxy/forgetProxy are not reference counted - multiple calls to <rememberProxy:> are all undone by a single call to <forgetProxy:> 
+ Note: rememberProxy/forgetProxy are not reference counted - multiple calls to <rememberProxy:> are all undone by a single call to <forgetProxy:>
  @param forgottenProxy The proxy to forget.
  @see rememberProxy:
  */

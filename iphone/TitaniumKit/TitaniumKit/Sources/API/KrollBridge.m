@@ -371,15 +371,39 @@ CFMutableSetRef krollBridgeRegistry = nil;
 
 - (void)didStartNewContext:(KrollContext *)kroll
 {
-  // create Titanium global object
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-  // Load the "Titanium" object into the global scope
-  NSString *basePath = (url == nil) ? [TiHost resourcePath] : [[[url path] stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"."];
-  NSURL *baseURL = [NSURL fileURLWithPath:basePath];
 
   JSGlobalContextRef jsContext = [kroll context];
   JSContext *objcJSContext = [JSContext contextWithJSGlobalContextRef:jsContext];
+  
+  // Make the global object itself available under the name "global"
+  [[objcJSContext globalObject] defineProperty:@"global"
+                                    descriptor:@{
+                                                 JSPropertyDescriptorEnumerableKey : @NO,
+                                                 JSPropertyDescriptorWritableKey : @NO,
+                                                 JSPropertyDescriptorConfigurableKey : @NO,
+                                                 JSPropertyDescriptorValueKey : [objcJSContext globalObject]
+                                                 }];
+  // Set the __dirname and __filename for the app.js.
+  // For other files, it will be injected via the `TitaniumModuleRequireFormat` property
+  [[objcJSContext globalObject] defineProperty:@"__dirname"
+                                    descriptor:@{
+                                                 JSPropertyDescriptorEnumerableKey : @NO,
+                                                 JSPropertyDescriptorWritableKey : @NO,
+                                                 JSPropertyDescriptorConfigurableKey : @NO,
+                                                 JSPropertyDescriptorValueKey : @"/"
+                                                 }];
+  [[objcJSContext globalObject] defineProperty:@"__filename"
+                                    descriptor:@{
+                                                 JSPropertyDescriptorEnumerableKey : @NO,
+                                                 JSPropertyDescriptorWritableKey : @NO,
+                                                 JSPropertyDescriptorConfigurableKey : @NO,
+                                                 JSPropertyDescriptorValueKey : @"/app.js"
+                                                 }];
+  // Load the "Titanium" object into the global scope
+//  NSString *basePath = (url == nil) ? [TiHost resourcePath] : [[[url path] stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"."];
+//  NSURL *baseURL = [NSURL fileURLWithPath:basePath];
+  // Now define "Ti" and "Titanium"
   TopTiModule *module = [[[TopTiModule alloc] init] autorelease];
   JSValue *titanium = [JSValue valueWithObject:module inContext:objcJSContext];
   NSDictionary *dictionary = @{
@@ -448,7 +472,7 @@ CFMutableSetRef krollBridgeRegistry = nil;
       JSValue *result;
       Class moduleClass = NSClassFromString([NSString stringWithFormat:@"%@Module", name]);
       if (moduleClass != nil) {
-        result = [JSValue valueWithObject:[[[moduleClass alloc] init] autorelease] inContext:[JSContext currentContext]];
+        result = [JSValue valueWithObject:[[moduleClass alloc] init] inContext:[JSContext currentContext]];
       } else {
         result = [JSValue valueWithUndefinedInContext:[JSContext currentContext]];
       }
@@ -483,31 +507,6 @@ CFMutableSetRef krollBridgeRegistry = nil;
 
   // Load the "console" object into the global scope
   objcJSContext[@"console"] = [[TiConsole alloc] init];
-
-  // Make the global object itself available under the name "global"
-  [[objcJSContext globalObject] defineProperty:@"global"
-                                    descriptor:@{
-                                      JSPropertyDescriptorEnumerableKey : @NO,
-                                      JSPropertyDescriptorWritableKey : @NO,
-                                      JSPropertyDescriptorConfigurableKey : @NO,
-                                      JSPropertyDescriptorValueKey : [objcJSContext globalObject]
-                                    }];
-  // Set the __dirname and __filename for the app.js.
-  // For other files, it will be injected via the `TitaniumModuleRequireFormat` property
-  [[objcJSContext globalObject] defineProperty:@"__dirname"
-                                    descriptor:@{
-                                      JSPropertyDescriptorEnumerableKey : @NO,
-                                      JSPropertyDescriptorWritableKey : @NO,
-                                      JSPropertyDescriptorConfigurableKey : @NO,
-                                      JSPropertyDescriptorValueKey : @"/"
-                                    }];
-  [[objcJSContext globalObject] defineProperty:@"__filename"
-                                    descriptor:@{
-                                      JSPropertyDescriptorEnumerableKey : @NO,
-                                      JSPropertyDescriptorWritableKey : @NO,
-                                      JSPropertyDescriptorConfigurableKey : @NO,
-                                      JSPropertyDescriptorValueKey : @"/app.js"
-                                    }];
 
   //if we have a preload dictionary, register those static key/values into our namespace
   if (preload != nil) {

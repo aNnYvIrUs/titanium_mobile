@@ -6,6 +6,7 @@
  */
 #import "ObjcProxy.h"
 #import "TiBase.h"
+#import "TiHost.h"
 
 @implementation ObjcProxy
 
@@ -15,9 +16,26 @@
 {
   if (self = [super init]) {
     self.bubbleParent = YES;
+    JSContext* context = [JSContext currentContext];
+    if (context == nil) { // from native code!
+      // Ask KrollBridge for current URL?
+      NSString *basePath = [TiHost resourcePath];
+      baseURL = [[NSURL fileURLWithPath:basePath] retain];
+    } else {
+      JSValue *filename = [context evaluateScript:@"__filename"];
+      NSString *asString = [filename toString];
+      NSString *base;
+      [TiHost resourceBasedURL:asString baseURL:&base];
+      baseURL = [[NSURL fileURLWithPath:base] retain];
+    }
     pthread_rwlock_init(&m_listenerLock, NULL);
   }
   return self;
+}
+
+- (NSURL *)_baseURL
+{
+  return baseURL;
 }
 
 - (void)addEventListener:(NSString *)name withCallback:(JSValue *)callback

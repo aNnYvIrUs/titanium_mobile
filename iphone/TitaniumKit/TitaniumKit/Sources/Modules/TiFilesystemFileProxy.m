@@ -140,6 +140,7 @@ FILENOOP(setHidden
 - (NSArray *)getDirectoryListing:(id)args
 {
   NSError *error = nil;
+  // FIXME Don't even try/log it if this is a filepath (and not a dir!)
   NSArray *resultArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:&error];
   if (error != nil) {
     NSLog(@"[ERROR] Could not receive directory listing: %@", error.localizedDescription);

@@ -65,6 +65,7 @@ static XHRBridge *xhrBridge = nil;
   NSDictionary *event = [decoder fragmentWithString:arguments error:&error];
 
   id<TiEvaluator> context = [[xhrBridge host] contextForToken:pageToken];
+  // FIXME: This doesn't play nice with the new obj-c based modules!
   TiModule *tiModule = (TiModule *)[[xhrBridge host] moduleNamed:module context:context];
   [tiModule setExecutionContext:context];
 

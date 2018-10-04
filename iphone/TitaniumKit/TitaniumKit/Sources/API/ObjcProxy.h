@@ -36,11 +36,11 @@ JSExportAs(fireEvent,
  The base class for Titanium proxies using new Obj-C API.
  */
 @interface ObjcProxy : NSObject <ProxyExports> {
-  @public
-  BOOL _bubbleParent;
-
   @private
   NSMutableDictionary *m_listeners; // new listener map for Obj-C JSC API
   pthread_rwlock_t m_listenerLock;
+  NSURL *baseURL;
 }
+
+- (NSURL *)_baseURL;
 @end
