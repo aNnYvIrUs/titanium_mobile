@@ -16,7 +16,7 @@
 {
   if (self = [super init]) {
     self.bubbleParent = YES;
-    JSContext* context = [JSContext currentContext];
+    JSContext *context = [JSContext currentContext];
     if (context == nil) { // from native code!
       // Ask KrollBridge for current URL?
       NSString *basePath = [TiHost resourcePath];

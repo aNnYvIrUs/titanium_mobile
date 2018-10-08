@@ -1,13 +1,12 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2009-2010 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2009-Present by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
 
 #import "LocaleModule.h"
 #import <TitaniumKit/TiLocale.h>
-#import <TitaniumKit/TiUtils.h>
 
 @implementation LocaleModule
 
@@ -16,39 +15,53 @@
   return @"Ti.Locale";
 }
 
-- (id)getString:(id)args
+- (NSString *)getString:(NSString *)key withHint:(id)hint
 {
-  NSString *key = [args objectAtIndex:0];
-  NSString *def = [args count] > 1 ? [args objectAtIndex:1] : nil;
-  return [TiLocale getString:key comment:def];
+  if (hint != nil && ![hint isKindOfClass:[NSString class]]) {
+    hint = nil;
+  }
+  return [TiLocale getString:key comment:hint];
 }
 
-- (id)currentLanguage
+- (NSString *)currentLanguage
 {
   return [TiLocale defaultLocale];
 }
 
-- (id)currentCountry
+- (NSString *)getCurrentLanguage
+{
+  return [self currentLanguage];
+}
+
+- (NSString *)currentCountry
 {
   return [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
 }
 
-- (id)currentLocale
+- (NSString *)getCurrentCountry
+{
+  return [self currentCountry];
+}
+
+- (NSString *)currentLocale
 {
   // Have to return "lan-COUNTRY" instead of "lan_COUNTRY" to conform to Android
   return [[[NSLocale currentLocale] localeIdentifier] stringByReplacingOccurrencesOfString:@"_" withString:@"-"];
 }
 
-- (id)getCurrencyCode:(id)arg
+- (NSString *)getCurrentLocale
 {
-  ENSURE_SINGLE_ARG(arg, NSString);
-  return [[[[NSLocale alloc] initWithLocaleIdentifier:arg] autorelease] objectForKey:NSLocaleCurrencyCode];
+  return [self currentLocale];
 }
 
-- (id)getCurrencySymbol:(id)arg
+- (NSString *)getCurrencyCode:(NSString *)locale
 {
-  ENSURE_SINGLE_ARG(arg, NSString);
-  NSString *localeID = [NSLocale localeIdentifierFromComponents:[NSDictionary dictionaryWithObject:arg forKey:NSLocaleCurrencyCode]];
+  return [[[[NSLocale alloc] initWithLocaleIdentifier:locale] autorelease] objectForKey:NSLocaleCurrencyCode];
+}
+
+- (NSString *)getCurrencySymbol:(NSString *)currencyCode
+{
+  NSString *localeID = [NSLocale localeIdentifierFromComponents:[NSDictionary dictionaryWithObject:currencyCode forKey:NSLocaleCurrencyCode]];
   NSLocale *locale = [[[NSLocale alloc] initWithLocaleIdentifier:localeID] autorelease];
   NSString *currency = [locale objectForKey:NSLocaleCurrencySymbol];
   // Many countries do $ and iOS (correctly) differentiates them when provided only with currecy code.  However
@@ -59,16 +72,14 @@
   return currency;
 }
 
-- (id)getLocaleCurrencySymbol:(id)arg
+- (NSString *)getLocaleCurrencySymbol:(NSString *)locale
 {
-  ENSURE_SINGLE_ARG(arg, NSString);
-  return [[[[NSLocale alloc] initWithLocaleIdentifier:arg] autorelease] objectForKey:NSLocaleCurrencySymbol];
+  return [[[[NSLocale alloc] initWithLocaleIdentifier:locale] autorelease] objectForKey:NSLocaleCurrencySymbol];
 }
 
-- (void)setLanguage:(id)args
+- (void)setLanguage:(NSString *)locale
 {
-  ENSURE_SINGLE_ARG(args, NSString);
-  [TiLocale setLocale:args];
+  [TiLocale setLocale:locale];
 }
 
 @end

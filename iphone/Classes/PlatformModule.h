@@ -56,7 +56,7 @@
 - (NSString *)getId __attribute((deprecated("Use the property instead.")));
 - (NSString *)getIdentifierForAdvertising __attribute((deprecated("Use the property instead.")));
 - (NSString *)getIdentifierForVendor __attribute((deprecated("Use the property instead.")));
-- (BOOL) getIsAdvertisingTrackingEnabled __attribute((deprecated("Use the property instead.")));
+- (BOOL)getIsAdvertisingTrackingEnabled __attribute((deprecated("Use the property instead.")));
 - (NSString *)getLocale __attribute((deprecated("Use the property instead.")));
 - (NSString *)getMacaddress __attribute((deprecated("Use the property instead.")));
 - (NSString *)getManufacturer __attribute((deprecated("Use the property instead.")));

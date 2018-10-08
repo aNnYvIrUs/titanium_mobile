@@ -496,6 +496,46 @@ NSString *const DATA_IFACE = @"pdp_ip0";
   return [self netmask];
 }
 
+- (NSString *)getArchitecture
+{
+  return [self architecture];
+}
+
+- (NSString *)getModel
+{
+  return [self model];
+}
+
+- (NSString *)getName
+{
+  return [self name];
+}
+
+- (NSString *)getOsname
+{
+  return [self osname];
+}
+
+- (NSString *)getOstype
+{
+  return [self ostype];
+}
+
+- (NSNumber *)getProcessorCount
+{
+  return [self processorCount];
+}
+
+- (NSString *)getUsername
+{
+  return [self username];
+}
+
+- (NSString *)getVersion
+{
+  return [self version];
+}
+
 MAKE_SYSTEM_PROP(BATTERY_STATE_UNKNOWN, UIDeviceBatteryStateUnknown);
 MAKE_SYSTEM_PROP(BATTERY_STATE_UNPLUGGED, UIDeviceBatteryStateUnplugged);
 MAKE_SYSTEM_PROP(BATTERY_STATE_CHARGING, UIDeviceBatteryStateCharging);
@@ -506,7 +546,7 @@ MAKE_SYSTEM_PROP(BATTERY_STATE_FULL, UIDeviceBatteryStateFull);
 - (void)batteryStateChanged:(NSNotification *)note
 {
   NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:[self batteryState], @"state", [self batteryLevel], @"level", nil];
-  [self fireEvent:@"battery" withObject:event];
+  [self fireEvent:@"battery" withDict:event];
 }
 
 @end

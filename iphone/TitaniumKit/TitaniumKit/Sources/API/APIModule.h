@@ -4,12 +4,10 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
- #import "ObjcProxy.h"
+#import "ObjcProxy.h"
 @import JavaScriptCore;
 
 @protocol APIExports <JSExport>
-
-@property (readonly, nonatomic) NSString *apiName;
 
 /**
  Logs a new debug message to the console.
@@ -67,13 +65,8 @@
  @param args The message to log. Identical to `error:`.
  */
 - (void)critical:(id)args;
-JSExportAs(log,
-           /**
- Logs a new message with a given severity. Used internally by TiConsole.
 
- @param args An array of messages.
- @param severity The severity of the log messages.
- */
+JSExportAs(log,
            -(void)log
            : (id)level withMessage
            : (id)args);
@@ -82,5 +75,11 @@ JSExportAs(log,
 @end
 
 @interface APIModule : ObjcProxy <APIExports>
+/**
+ Logs a new message with a given severity. Used internally by TiConsole.
+
+ @param args An array of messages.
+ @param severity The severity of the log messages.
+*/
 - (void)logMessage:(id)args severity:(NSString *)severity; // Used by TiConsole
 @end

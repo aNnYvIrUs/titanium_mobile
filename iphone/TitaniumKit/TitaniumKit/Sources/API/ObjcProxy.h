@@ -18,9 +18,9 @@
 @property BOOL bubbleParent;
 
 // accessors
-- (NSString *) getApiName __attribute((deprecated("Use the property instead.")));
-- (BOOL) getBubbleParent __attribute((deprecated("Use the property instead.")));
-- (void) setBubbleParent:(BOOL)bubbleParent __attribute((deprecated("Use the property instead.")));
+- (NSString *)getApiName __attribute((deprecated("Use the property instead.")));
+- (BOOL)getBubbleParent __attribute((deprecated("Use the property instead.")));
+- (void)setBubbleParent:(BOOL)bubbleParent __attribute((deprecated("Use the property instead.")));
 
 // methods
 JSExportAs(addEventListener,

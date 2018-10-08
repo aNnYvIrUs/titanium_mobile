@@ -11,20 +11,25 @@
 
 @protocol TiPlatformDisplayCapsExports <JSExport>
 
-@property (nonatomic, readonly) NSString *density;
-@property (nonatomic, readonly) NSNumber *dpi;
-@property (nonatomic, readonly) NSNumber *logicalDensityFactor;
-@property (nonatomic, readonly) NSNumber *platformHeight;
-@property (nonatomic, readonly) NSNumber *platformWidth;
+@property (readonly) NSString *density;
+@property (readonly) NSNumber *dpi;
+@property (readonly) NSNumber *logicalDensityFactor;
+@property (readonly) NSNumber *platformHeight;
+@property (readonly) NSNumber *platformWidth;
 // TODO xdpi
 // TODO ydpi
 
 // TODO: deprecated getters, remove in SDK 9.0.0!
-- (NSString *)getDensity;
-- (NSNumber *)getDpi;
-- (NSNumber *)getLogicalDensityFactor;
-- (NSNumber *)getPlatformHeight;
-- (NSNumber *)getPlatformWidth;
+- (NSString *)getDensity __attribute((deprecated("Use the property instead.")));
+;
+- (NSNumber *)getDpi __attribute((deprecated("Use the property instead.")));
+;
+- (NSNumber *)getLogicalDensityFactor __attribute((deprecated("Use the property instead.")));
+;
+- (NSNumber *)getPlatformHeight __attribute((deprecated("Use the property instead.")));
+;
+- (NSNumber *)getPlatformWidth __attribute((deprecated("Use the property instead.")));
+;
 
 @end
 

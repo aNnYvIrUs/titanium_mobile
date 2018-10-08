@@ -14,7 +14,7 @@
 // NOTE: device capabilities currently are hardcoded for iPad, while high/low
 // display density is now detected for iPhone / iPod Touch under iOS 4.
 
-- (id)density
+- (NSString *)density
 {
   if ([TiUtils is3xRetina]) {
     return @"xhigh";
@@ -25,7 +25,7 @@
   return @"medium";
 }
 
-- (NSNumber *)getDensity
+- (NSString *)getDensity
 {
   return [self density];
 }
