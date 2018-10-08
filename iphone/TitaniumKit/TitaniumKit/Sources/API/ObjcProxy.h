@@ -9,13 +9,13 @@
 
 @protocol ProxyExports <JSExport>
 
-@property (readonly, nonatomic) NSString *apiName;
+@property (readonly) NSString *apiName;
 /**
  Indicates that this proxy should honor bubbling of user events, if the proxy
  is the type that has a parent to bubble to (This is primairly views, but may
  have some exceptions).
  */
-@property (readwrite, assign) BOOL bubbleParent;
+@property BOOL bubbleParent;
 
 JSExportAs(addEventListener,
            -(void)addEventListener

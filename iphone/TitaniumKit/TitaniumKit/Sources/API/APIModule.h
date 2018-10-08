@@ -9,6 +9,8 @@
 
 @protocol APIExports <JSExport>
 
+@property (readonly, nonatomic) NSString *apiName;
+
 /**
  Logs a new debug message to the console.
 

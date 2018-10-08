@@ -9,8 +9,6 @@
 
 @protocol APIExports <JSExport>
 
-@property (readonly) NSString *apiName;
-
 /**
  Logs a new debug message to the console.
 
@@ -77,5 +75,10 @@ JSExportAs(log,
 - (void)log:(id)level withMessage:(id)args
 );
 - (void)reportUnhandledException:(NSArray *)args;
+
+@end
+
+
+@interface APIModule : ObjcProxy <APIExports>
 
 @end

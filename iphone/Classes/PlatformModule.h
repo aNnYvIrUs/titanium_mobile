@@ -13,36 +13,35 @@
 
 @protocol TiPlatformExports <JSExport>
 
-@property (readonly, nonatomic) NSNumber *BATTERY_STATE_CHARGING;
-@property (readonly, nonatomic) NSNumber *BATTERY_STATE_FULL;
-@property (readonly, nonatomic) NSNumber *BATTERY_STATE_UNKNOWN;
-@property (readonly, nonatomic) NSNumber *BATTERY_STATE_UNPLUGGED;
+@property (readonly) NSNumber *BATTERY_STATE_CHARGING;
+@property (readonly) NSNumber *BATTERY_STATE_FULL;
+@property (readonly) NSNumber *BATTERY_STATE_UNKNOWN;
+@property (readonly) NSNumber *BATTERY_STATE_UNPLUGGED;
 
-@property (readonly, nonatomic) NSString *apiName;
-@property (readonly, nonatomic) NSString *address;
-@property (readonly, nonatomic) NSString *architecture;
-@property (readonly, nonatomic) NSNumber *availableMemory;
-@property (readonly, nonatomic) NSNumber *batteryLevel;
-@property (readwrite, nonatomic, assign) NSNumber *batteryMonitoring;
-@property (readonly, nonatomic) NSNumber *batteryState;
-@property (readonly, nonatomic) TiPlatformDisplayCaps *displayCaps;
-@property (readonly, nonatomic) TiPlatformDisplayCaps *DisplayCaps;
-@property (readonly, nonatomic) NSString *id;
-@property (readonly, nonatomic) NSString *identifierForAdvertising;
-@property (readonly, nonatomic) NSString *identifierForVendor;
-@property (readonly, nonatomic) BOOL isAdvertisingTrackingEnabled;
-@property (readonly, nonatomic) NSString *locale;
-@property (readonly, nonatomic) NSString *macaddress;
-@property (readonly, nonatomic) NSString *manufacturer;
-@property (readonly, nonatomic) NSString *model;
-@property (readonly, nonatomic) NSString *name;
-@property (readonly, nonatomic) NSString *netmask;
-@property (readonly, nonatomic) NSString *osname;
-@property (readonly, nonatomic) NSString *ostype;
-@property (readonly, nonatomic) NSNumber *processorCount;
-@property (readonly, nonatomic) NSString *runtime;
-@property (readonly, nonatomic) NSString *username;
-@property (readonly, nonatomic) NSString *version;
+@property (readonly) NSString *address;
+@property (readonly) NSString *architecture;
+@property (readonly) NSNumber *availableMemory;
+@property (readonly) NSNumber *batteryLevel;
+@property NSNumber *batteryMonitoring;
+@property (readonly) NSNumber *batteryState;
+@property (readonly) TiPlatformDisplayCaps *displayCaps;
+@property (readonly) TiPlatformDisplayCaps *DisplayCaps;
+@property (readonly) NSString *id;
+@property (readonly) NSString *identifierForAdvertising;
+@property (readonly) NSString *identifierForVendor;
+@property (readonly) BOOL isAdvertisingTrackingEnabled;
+@property (readonly) NSString *locale;
+@property (readonly) NSString *macaddress;
+@property (readonly) NSString *manufacturer;
+@property (readonly) NSString *model;
+@property (readonly) NSString *name;
+@property (readonly) NSString *netmask;
+@property (readonly) NSString *osname;
+@property (readonly) NSString *ostype;
+@property (readonly) NSNumber *processorCount;
+@property (readonly) NSString *runtime;
+@property (readonly) NSString *username;
+@property (readonly) NSString *version;
 
 // TODO Add accessor methods for the properties!
 
