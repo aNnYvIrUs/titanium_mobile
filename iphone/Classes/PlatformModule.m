@@ -109,7 +109,6 @@ NSString *const DATA_IFACE = @"pdp_ip0";
   //  RELEASE_TO_NIL(address);
   RELEASE_TO_NIL(ostype);
   RELEASE_TO_NIL(availableMemory);
-  //  RELEASE_TO_NIL(capabilities);
   [super dealloc];
 }
 
@@ -196,9 +195,19 @@ NSString *const DATA_IFACE = @"pdp_ip0";
   return @"javascriptcore";
 }
 
+- (NSString *)getRuntime
+{
+  return [self runtime];
+}
+
 - (NSString *)manufacturer
 {
   return @"apple";
+}
+
+- (NSString *)getManufacturer
+{
+  return [self manufacturer];
 }
 
 - (NSString *)locale
@@ -210,14 +219,29 @@ NSString *const DATA_IFACE = @"pdp_ip0";
   return [languages count] > 0 ? [languages objectAtIndex:0] : @"en";
 }
 
+- (NSString *)getLocale
+{
+  return [self locale];
+}
+
 - (NSString *)macaddress
 {
   return [TiUtils appIdentifier];
 }
 
+- (NSString *)getMacaddress
+{
+  return [self macaddress];
+}
+
 - (NSString *)identifierForVendor
 {
   return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+}
+
+- (NSString *)getIdentifierForVendor
+{
+  return [self identifierForVendor];
 }
 
 #if defined(USE_TI_PLATFORMIDENTIFIERFORADVERTISING) || defined(USE_TI_PLATFORMGETIDENTIFIERFORADVERTISING)
@@ -242,9 +266,24 @@ NSString *const DATA_IFACE = @"pdp_ip0";
 }
 #endif
 
+- (BOOL)getIsAdvertisingTrackingEnabled
+{
+  return [self isAdvertisingTrackingEnabled];
+}
+
+- (NSString *)getIdentifierForAdvertising
+{
+  return [self identifierForAdvertising];
+}
+
 - (id)id
 {
   return [TiUtils appIdentifier];
+}
+
+- (id)getId
+{
+  return [self id];
 }
 
 - (NSString *)createUUID
@@ -275,6 +314,11 @@ NSString *const DATA_IFACE = @"pdp_ip0";
   }
 
   return [NSNumber numberWithDouble:((vm_page_size * vmStats.free_count) / 1024.0) / 1024.0];
+}
+
+- (NSNumber *)getAvailableMemory
+{
+  return [self availableMemory];
 }
 
 - (BOOL)openURL:(NSString *)url withOptions:(id)options andCallback:(JSValue *)callback
@@ -318,12 +362,14 @@ NSString *const DATA_IFACE = @"pdp_ip0";
   return [self displayCaps];
 }
 
+- (TiPlatformDisplayCaps *)getDisplayCaps
+{
+  return [self DisplayCaps];
+}
+
 - (TiPlatformDisplayCaps *)displayCaps
 {
-  //  if (capabilities == nil) {
   return [[[TiPlatformDisplayCaps alloc] init] autorelease];
-  //  }
-  //  return capabilities;
 }
 
 - (void)setBatteryMonitoring:(NSNumber *)yn
@@ -350,6 +396,11 @@ NSString *const DATA_IFACE = @"pdp_ip0";
   return NUMBOOL([UIDevice currentDevice].batteryMonitoringEnabled);
 }
 
+- (NSNumber *)getBatteryMonitoring
+{
+  return [self batteryMonitoring];
+}
+
 - (NSNumber *)batteryState
 {
   if (![NSThread isMainThread]) {
@@ -363,6 +414,11 @@ NSString *const DATA_IFACE = @"pdp_ip0";
   return NUMINT([[UIDevice currentDevice] batteryState]);
 }
 
+- (NSNumber *)getBatteryState
+{
+  return [self batteryState];
+}
+
 - (NSNumber *)batteryLevel
 {
   if (![NSThread isMainThread]) {
@@ -374,6 +430,11 @@ NSString *const DATA_IFACE = @"pdp_ip0";
     return [result autorelease];
   }
   return NUMFLOAT([[UIDevice currentDevice] batteryLevel]);
+}
+
+- (NSNumber *)getBatteryLevel
+{
+  return [self batteryLevel];
 }
 
 - (NSString *)address
@@ -393,6 +454,11 @@ NSString *const DATA_IFACE = @"pdp_ip0";
 #endif
 }
 
+- (NSString *)getAddress
+{
+  return [self address];
+}
+
 - (NSString *)dataAddress
 {
 #if TARGET_IPHONE_SIMULATOR
@@ -400,6 +466,11 @@ NSString *const DATA_IFACE = @"pdp_ip0";
 #else
   return [self getIface:DATA_IFACE mask:NO];
 #endif
+}
+
+- (NSString *)getDataAddress
+{
+  return [self dataAddress];
 }
 
 // Only available for the local wifi; why would you want it for the data network?
@@ -420,6 +491,11 @@ NSString *const DATA_IFACE = @"pdp_ip0";
 #endif
 }
 
+- (NSString *)getNetmask
+{
+  return [self netmask];
+}
+
 MAKE_SYSTEM_PROP(BATTERY_STATE_UNKNOWN, UIDeviceBatteryStateUnknown);
 MAKE_SYSTEM_PROP(BATTERY_STATE_UNPLUGGED, UIDeviceBatteryStateUnplugged);
 MAKE_SYSTEM_PROP(BATTERY_STATE_CHARGING, UIDeviceBatteryStateCharging);
@@ -431,12 +507,6 @@ MAKE_SYSTEM_PROP(BATTERY_STATE_FULL, UIDeviceBatteryStateFull);
 {
   NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:[self batteryState], @"state", [self batteryLevel], @"level", nil];
   [self fireEvent:@"battery" withObject:event];
-}
-
-- (void)didReceiveMemoryWarning:(NSNotification *)notification
-{
-  //  RELEASE_TO_NIL(capabilities);
-  [super didReceiveMemoryWarning:notification];
 }
 
 @end

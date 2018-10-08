@@ -43,8 +43,34 @@
 @property (readonly) NSString *username;
 @property (readonly) NSString *version;
 
-// TODO Add accessor methods for the properties!
+// TODO These are deprecated, remove in SDK 9.0.0
+// accessors
+- (NSString *)getAddress __attribute((deprecated("Use the property instead.")));
+- (NSString *)getArchitecture __attribute((deprecated("Use the property instead.")));
+- (NSNumber *)getAvailableMemory __attribute((deprecated("Use the property instead.")));
+- (NSNumber *)getBatteryLevel __attribute((deprecated("Use the property instead.")));
+- (NSNumber *)getBatteryMonitoring __attribute((deprecated("Use the property instead.")));
+- (void)setBatteryMonitoring:(NSNumber *)monitoring __attribute((deprecated("Use the property instead.")));
+- (NSNumber *)getBatteryState __attribute((deprecated("Use the property instead.")));
+- (TiPlatformDisplayCaps *)getDisplayCaps __attribute((deprecated("Use the property instead.")));
+- (NSString *)getId __attribute((deprecated("Use the property instead.")));
+- (NSString *)getIdentifierForAdvertising __attribute((deprecated("Use the property instead.")));
+- (NSString *)getIdentifierForVendor __attribute((deprecated("Use the property instead.")));
+- (BOOL) getIsAdvertisingTrackingEnabled __attribute((deprecated("Use the property instead.")));
+- (NSString *)getLocale __attribute((deprecated("Use the property instead.")));
+- (NSString *)getMacaddress __attribute((deprecated("Use the property instead.")));
+- (NSString *)getManufacturer __attribute((deprecated("Use the property instead.")));
+- (NSString *)getModel __attribute((deprecated("Use the property instead.")));
+- (NSString *)getName __attribute((deprecated("Use the property instead.")));
+- (NSString *)getNetmask __attribute((deprecated("Use the property instead.")));
+- (NSString *)getOsname __attribute((deprecated("Use the property instead.")));
+- (NSString *)getOstype __attribute((deprecated("Use the property instead.")));
+- (NSNumber *)getProcessorCount __attribute((deprecated("Use the property instead.")));
+- (NSString *)getRuntime __attribute((deprecated("Use the property instead.")));
+- (NSString *)getUsername __attribute((deprecated("Use the property instead.")));
+- (NSString *)getVersion __attribute((deprecated("Use the property instead.")));
 
+// methods
 - (BOOL)canOpenURL:(NSString *)url;
 - (NSString *)createUUID;
 - (BOOL)is24HourTimeFormat;

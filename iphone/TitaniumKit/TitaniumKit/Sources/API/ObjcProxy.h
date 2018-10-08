@@ -17,6 +17,12 @@
  */
 @property BOOL bubbleParent;
 
+// accessors
+- (NSString *) getApiName __attribute((deprecated("Use the property instead.")));
+- (BOOL) getBubbleParent __attribute((deprecated("Use the property instead.")));
+- (void) setBubbleParent:(BOOL)bubbleParent __attribute((deprecated("Use the property instead.")));
+
+// methods
 JSExportAs(addEventListener,
            -(void)addEventListener
            : (NSString *)name withCallback
@@ -43,4 +49,8 @@ JSExportAs(fireEvent,
 }
 
 - (NSURL *)_baseURL;
+
+// hooks for when an event listener gets added/removed
+- (void)_listenerAdded:(NSString *)type count:(int)count;
+- (void)_listenerRemoved:(NSString *)type count:(int)count;
 @end

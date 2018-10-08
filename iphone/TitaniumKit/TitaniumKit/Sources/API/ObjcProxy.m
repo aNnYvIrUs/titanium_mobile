@@ -41,6 +41,7 @@
 - (void)addEventListener:(NSString *)name withCallback:(JSValue *)callback
 {
   pthread_rwlock_wrlock(&m_listenerLock);
+  int ourCallbackCount = 0;
   @try {
     if (m_listeners == nil) {
       m_listeners = [[NSMutableDictionary alloc] initWithCapacity:3];
@@ -52,16 +53,20 @@
       listenersForType = [[NSMutableArray alloc] init];
     }
     [listenersForType addObject:managedRef];
+    ourCallbackCount = [listenersForType count];
     [m_listeners setObject:listenersForType forKey:name];
   }
   @finally {
     pthread_rwlock_unlock(&m_listenerLock);
+    [self _listenerAdded:name count:ourCallbackCount];
   }
 }
 
 - (void)removeEventListener:(NSString *)name withCallback:(JSValue *)callback
 {
   pthread_rwlock_wrlock(&m_listenerLock);
+  int ourCallbackCount = 0;
+  BOOL removed = false;
   @try {
     if (m_listeners == nil) {
       return;
@@ -80,13 +85,28 @@
         [actualCallback.context.virtualMachine removeManagedReference:storedCallback withOwner:self];
         [listenersForType removeObjectAtIndex:i];
         [m_listeners setObject:listenersForType forKey:name];
+        ourCallbackCount = [listenersForType count];
+        removed = true;
         break;
       }
     }
   }
   @finally {
     pthread_rwlock_unlock(&m_listenerLock);
+    if (removed) {
+      [self _listenerRemoved:name count:ourCallbackCount];
+    }
   }
+}
+
+- (void)_listenerAdded:(NSString *)type count:(int)count
+{
+  // for subclasses
+}
+
+- (void)_listenerRemoved:(NSString *)type count:(int)count
+{
+  // for subclasses
 }
 
 - (void)fireEvent:(NSString *)name withDict:(NSDictionary *)dict
@@ -116,6 +136,16 @@
 {
   DebugLog(@"[ERROR] Subclasses must override the apiName API endpoint.");
   return @"Ti.Proxy";
+}
+
+- (NSString *)getApiName
+{
+  return [self apiName];
+}
+
+- (BOOL)getBubbleParent
+{
+  return [self bubbleParent];
 }
 
 - (void)dealloc
