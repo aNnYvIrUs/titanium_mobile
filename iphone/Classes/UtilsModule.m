@@ -62,7 +62,7 @@
   if (base64Encoded != nil) {
     // FIXME: Remove conversion once TiBlob is moved to Obj-c proxy
     return [self NativeToJSValue:[[[TiBlob alloc] initWithData:[base64Encoded dataUsingEncoding:NSUTF8StringEncoding]
-                                        mimetype:@"application/octet-stream"] autorelease]];
+                                                      mimetype:@"application/octet-stream"] autorelease]];
   }
 
   return nil;

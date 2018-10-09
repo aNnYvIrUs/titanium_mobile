@@ -6,8 +6,8 @@
  */
 #import "ObjcProxy.h"
 #import "TiBase.h"
-#import "TiHost.h"
 #import "TiBindingTiValue.h"
+#import "TiHost.h"
 
 @implementation ObjcProxy
 
