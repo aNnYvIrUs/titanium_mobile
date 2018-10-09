@@ -53,4 +53,17 @@ JSExportAs(fireEvent,
 // hooks for when an event listener gets added/removed
 - (void)_listenerAdded:(NSString *)type count:(int)count;
 - (void)_listenerRemoved:(NSString *)type count:(int)count;
+
+/**
+ The convenience method to raise an exception .
+ @param reason The exception reason.
+ @param subreason The exception subreason.
+ @param location The exception location.
+ */
++ (void)throwException:(NSString *)reason subreason:(NSString *)subreason location:(NSString *)location;
+- (void)throwException:(NSString *)reason subreason:(NSString *)subreason location:(NSString *)location;
+
+// FIXME: Should id be TiProxy* here?
+- (id)JSValueToNative:(JSValue *)jsValue;
+- (JSValue *)NativeToJSValue:(id)proxy;
 @end

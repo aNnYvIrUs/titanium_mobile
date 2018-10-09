@@ -7,10 +7,31 @@
 #import "ObjcProxy.h"
 #import "TiBase.h"
 #import "TiHost.h"
+#import "TiBindingTiValue.h"
 
 @implementation ObjcProxy
 
 @synthesize bubbleParent;
+
+DEFINE_EXCEPTIONS
+
+// Conversion methods for interacting with "old" KrollObject style proxies
+- (id)JSValueToNative:(JSValue *)jsValue
+{
+  JSContext *context = [jsValue context];
+  JSGlobalContextRef jsContext = [context JSGlobalContextRef];
+  JSValueRef valueRef = [jsValue JSValueRef];
+  id obj = TiBindingTiValueToNSObject(jsContext, valueRef);
+  return obj;
+}
+
+- (JSValue *)NativeToJSValue:(id)native
+{
+  JSContext *context = [JSContext currentContext];
+  JSGlobalContextRef jsContext = [context JSGlobalContextRef];
+  JSValueRef jsValueRef = TiBindingTiValueFromNSObject(jsContext, native);
+  return [JSValue valueWithJSValueRef:jsValueRef inContext:context];
+}
 
 - (id)init
 {
@@ -85,7 +106,7 @@
         [actualCallback.context.virtualMachine removeManagedReference:storedCallback withOwner:self];
         [listenersForType removeObjectAtIndex:i];
         [m_listeners setObject:listenersForType forKey:name];
-        ourCallbackCount = [listenersForType count];
+        ourCallbackCount = count - 1;
         removed = true;
         break;
       }
