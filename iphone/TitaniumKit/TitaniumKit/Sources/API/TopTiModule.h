@@ -9,23 +9,22 @@
 
 @protocol TiExports <JSExport>
 
-@property (readonly, nonatomic) NSString *buildDate;
-@property (readonly, nonatomic) NSString *buildHash;
-@property (readwrite, nonatomic) NSString *userAgent;
-@property (readonly, nonatomic) NSString *version;
+@property (readonly) NSString *buildDate;
+@property (readonly) NSString *buildHash;
+@property NSString *userAgent;
+@property (readonly) NSString *version;
 
 - (JSValue *)createBuffer:(NSDictionary *)arg;
 
 // Accessors from JS. This is pretty redundant, Maybe introduce macros for this common case?
 // (i.e. readonly properties also generate getter methods, readwrite generator getter/setters)
-- (NSString *)getBuildDate;
-- (NSString *)getBuildHash;
-- (NSString *)getUserAgent;
-- (void)setUserAgent:(NSString *)value;
-- (NSString *)getVersion;
+- (NSString *)getBuildDate __attribute((deprecated("Use the property instead.")));
+- (NSString *)getBuildHash __attribute((deprecated("Use the property instead.")));
+- (NSString *)getUserAgent __attribute((deprecated("Use the property instead.")));
+- (void)setUserAgent:(NSString *)value __attribute((deprecated("Use the property instead.")));
+- (NSString *)getVersion __attribute((deprecated("Use the property instead.")));
 
 @end
 
-// FIXME: Extend TiModule?
 @interface TopTiModule : ObjcProxy <TiExports>
 @end
