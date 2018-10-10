@@ -120,6 +120,24 @@ DEFINE_EXCEPTIONS
   }
 }
 
+- (BOOL)_hasListeners:(NSString *)type
+{
+  pthread_rwlock_rdlock(&m_listenerLock);
+  @try {
+    if (m_listeners == nil) {
+      return NO;
+    }
+    NSMutableArray *listenersForType = (NSMutableArray *)[m_listeners objectForKey:type];
+    if (listenersForType == nil) {
+      return NO;
+    }
+    return [listenersForType count] > 0;
+  }
+  @finally {
+    pthread_rwlock_unlock(&m_listenerLock);
+  }
+}
+
 - (void)_listenerAdded:(NSString *)type count:(int)count
 {
   // for subclasses
@@ -149,6 +167,28 @@ DEFINE_EXCEPTIONS
   }
   @finally {
     pthread_rwlock_unlock(&m_listenerLock);
+  }
+}
+
+- (void)_fireEventToListener:(NSString *)type withObject:(id)obj listener:(JSValue *)listener
+{
+  NSMutableDictionary *eventObject = nil;
+  if ([obj isKindOfClass:[NSDictionary class]]) {
+    eventObject = [NSMutableDictionary dictionaryWithDictionary:obj];
+  } else {
+    eventObject = [NSMutableDictionary dictionary];
+  }
+
+  // common event properties for all events we fire.. IF they're undefined.
+  if (eventObject[@"type"] == nil) {
+    eventObject[@"type"] = type;
+  }
+  if (eventObject[@"source"] == nil) {
+    eventObject[@"source"] = self;
+  }
+
+  if (listener != nil) {
+    [listener callWithArguments:@[ eventObject ]];
   }
 }
 
